@@ -97,8 +97,6 @@ Low (lfuse):  BF
 **MORSE:**
 ![MORSE](Photos/MORSE.png)
 
-##  
-
 ---
 
 **Автор Otto, г. Омск 2026**
