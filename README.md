@@ -61,18 +61,29 @@ Low (lfuse):  BF
 ![Корпус](Photos/Photos1.png)
 ![Корпус](Photos/Photos2.png)
 
-**Фото игр:**
+**DODGE:**
 ![DODGE](Photos/DODGE.png)
+**FLAPPY:**
 ![FLAPPY](Photos/FLAPPY.png)
+**SNAKE:**
 ![SNAKE](Photos/SNAKE.png)
+**RACE:**
 ![RACE](Photos/RACE.png)
+**PONG:**
 ![PONG](Photos/PONG.png)
+**BRICK:**
 ![BRICK](Photos/BRICK.png)
+**INVADER:**
 ![INVADER](Photos/INVADER.png)
+**JUMPER:**
 ![JUMPER](Photos/JUMPER.png)
+**TAPPER:**
 ![TAPPER](Photos/TAPPER.png)
+**AVOIDER:**
 ![AVOIDER](Photos/AVOIDER.png)
+**REFLECT:**
 ![REFLECT](Photos/REFLECT.png)
+**MORSE:**
 ![MORSE](Photos/MORSE.png)
 
 ##  
