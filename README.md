@@ -61,7 +61,7 @@ Low (lfuse):  BF
 ![Корпус](Photos/Photos1.png)
 ![Корпус](Photos/Photos2.png)
 
-**Фото:**
+**Фото игр:**
 ![DODGE](Photos/DODGE.png)
 ![FLAPPY](Photos/FLAPPY.png)
 ![SNAKE](Photos/SNAKE.png)
