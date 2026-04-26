@@ -5,7 +5,7 @@
 * ========================================
 * 12 игр с сохранением рекордов в EEPROM и необычным управлением: тактовая кнопка и ИК обнаружения препятствий YL-63 (FC-51)
 *
-* Релиз от 22.04.2026г, автор Otto
+* Релиз от 26.04.2026г, автор Otto
 *
 * DODGE — уклонение: препятствия летят навстречу по двум линиям, нужно вовремя перестраиваться (кнопка или датчик YL-63 = сменить линию).
 *
@@ -490,29 +490,26 @@ bool end_screen(uint8_t game_idx, uint16_t sc) {
   save_record(game_idx, sc);
   btns_clear();
 
-  uint8_t cursor = 0;
-  char score_buf[8];
-  uint8_t si = 0;
-  uint16_t tmp = sc;
-  if (tmp == 0) score_buf[si++] = '0';
-  else {
-    char t[6];
-    uint8_t j = 0;
-    while (tmp) {
-      t[j++] = '0' + (tmp % 10);
-      tmp /= 10;
-    }
-    while (j) score_buf[si++] = t[--j];
-  }
-  score_buf[si] = 0;
-
   bool new_rec = (sc > 0 && sc >= records[game_idx]);
+
+  uint8_t cursor = 0;
 
   while (1) {
     oled_clear();
     oled_text_center_P(0, PSTR("GAME OVER"));
-    if (new_rec) oled_text_center_P(9, PSTR("NEW RECORD"));
-    else oled_text_center(9, score_buf);
+    if (new_rec) {
+      oled_text_center_P(9, PSTR("NEW RECORD"));
+    } else {
+      // Считаем ширину числа для центрирования
+      uint8_t digits = 1;
+      uint16_t tmp = sc;
+      while (tmp >= 10) {
+        tmp /= 10;
+        digits++;
+      }
+      uint8_t x = (128 - digits * 6) / 2;
+      oled_num(x, 9, sc);
+    }
     oled_char(28, 22, cursor ? ' ' : '>');
     oled_text_P(34, 22, PSTR("RETRY"));
     oled_char(70, 22, cursor ? '>' : ' ');
@@ -522,12 +519,12 @@ bool end_screen(uint8_t game_idx, uint16_t sc) {
     while (1) {
       btn_upd();
       if (btn1()) {
-        cursor ^= 1;  // Переключает курсор между пунктами
+        cursor ^= 1;
         break;
       }
       if (btn2()) {
         btns_clear();
-        return !cursor;  // true = RETRY, false = MENU
+        return !cursor;
       }
     }
   }
@@ -738,10 +735,7 @@ bool game_snake() {
         sc++;
         if (sl < 48) sl++;
         if (sc % 5 == 0 && ms > 160) ms -= 15;  // Ускорение каждые 5 очков
-        if (sc > records[2]) {
-          records[2] = sc;
-          eeprom_write_word((uint16_t*)(2 * 2), sc);
-        }
+        save_record(2, sc);
         bool ok;
         do {  // Еда не должна появляться на теле змейки
           fx = (uint8_t)random(32);
@@ -896,7 +890,7 @@ bool game_brick() {
 
   while (1) {
     btn_upd();
-    if (btn1_held() && px > 0) px -= 3;
+    if (btn1_held()) px = (px > 3) ? px - 3 : 0;
     if (btn2_held() && px < 112) px += 3;
 
     if (millis() - lt >= 25) {
@@ -920,9 +914,9 @@ bool game_brick() {
           sc++;
         }
       }
-      if (bricks[0] == 0 && bricks[1] == 0) {  // Все блоки разрушены
-        msg_P(PSTR("YOU WIN"), PSTR(""), 2000);
-        return end_screen(5, sc);
+      if (bricks[0] == 0 && bricks[1] == 0) {  // Все блоки разрушены, генерация новых рандомных блоков
+        bricks[0] = (uint8_t)random(1, 255);
+        bricks[1] = (uint8_t)random(1, 255);
       }
       oled_clear();
       for (uint8_t r = 0; r < 2; r++)
@@ -1842,8 +1836,8 @@ int main() {
 
   oled_clear();
   oled_text_center_P(0, PSTR("RETRO ARCADE"));
-  oled_text_center_P(12, PSTR("12 GAMES V9.2"));
-  oled_text_center_P(24, PSTR("BY OTTO"));
+  oled_text_center_P(12, PSTR("12 GAMES BY OTTO"));
+  oled_text_center_P(24, PSTR("VER. 26.04.2026"));
   oled_update();
   wait_ms(3500);
 
